@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-royal-50: #eef2ff;
+  --color-royal-100: #dbe4ff;
+  --color-royal-200: #bac8ff;
+  --color-royal-300: #91a7ff;
+  --color-royal-400: #748ffc;
+  --color-royal-500: #4c6ef5;
+  --color-royal-600: #3b5bdb;
+  --color-royal-700: #2b4acb;
+  --color-royal-800: #1e3a8a;
+  --color-royal-900: #162d6e;
+  --color-royal-950: #0c1a42;
+  --color-gold-400: #d4a853;
+  --color-gold-500: #c9952e;
+  --color-gold-600: #b8860b;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-body);
+    color: #1a1a2e;
+    background: #ffffff;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-royal-800 text-white px-8 py-3 rounded-sm font-medium tracking-wide
+           hover:bg-royal-700 transition-all duration-300 uppercase text-sm;
+  }
+  .btn-secondary {
+    @apply border-2 border-royal-800 text-royal-800 px-8 py-3 rounded-sm font-medium tracking-wide
+           hover:bg-royal-800 hover:text-white transition-all duration-300 uppercase text-sm;
+  }
+  .btn-gold {
+    @apply bg-gold-600 text-white px-8 py-3 rounded-sm font-medium tracking-wide
+           hover:bg-gold-500 transition-all duration-300 uppercase text-sm;
+  }
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-16 py-16 md:py-24;
+  }
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #91a7ff; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #4c6ef5; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+.animate-slide-in { animation: slideIn 0.6s ease-out forwards; }
