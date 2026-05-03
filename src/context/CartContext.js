@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useReducer, useEffect } from "react";
+import { createContext, useContext, useReducer, useEffect, useRef } from "react";
+import { useCustomerAuth } from "./CustomerAuthContext";
 
 const CartContext = createContext();
 
@@ -62,9 +63,33 @@ function cartReducer(state, action) {
   }
 }
 
+function mergeCartItems(a, b) {
+  const out = [];
+  const keyOf = (it) => `${it.id}::${it.selectedSize || ""}::${it.selectedColor || ""}`;
+  const map = new Map();
+  for (const list of [a, b]) {
+    for (const it of list || []) {
+      const k = keyOf(it);
+      if (map.has(k)) {
+        const existing = map.get(k);
+        existing.quantity = (existing.quantity || 0) + (it.quantity || 0);
+      } else {
+        map.set(k, { ...it, quantity: it.quantity || 1 });
+        out.push(map.get(k));
+      }
+    }
+  }
+  return out;
+}
+
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const { customer } = useCustomerAuth();
+  const hydratedRef = useRef(false);
+  const syncTimerRef = useRef(null);
+  const lastCustomerIdRef = useRef(null);
 
+  // Initial load from localStorage (guest cart).
   useEffect(() => {
     try {
       const saved = localStorage.getItem("meglit-cart");
@@ -72,13 +97,68 @@ export function CartProvider({ children }) {
         dispatch({ type: "LOAD_CART", payload: JSON.parse(saved) });
       }
     } catch {}
+    hydratedRef.current = true;
   }, []);
 
+  // Persist to localStorage on every change.
   useEffect(() => {
+    if (!hydratedRef.current) return;
     try {
       localStorage.setItem("meglit-cart", JSON.stringify(state.items));
     } catch {}
   }, [state.items]);
+
+  // On sign-in: merge guest cart with server cart, then keep server in sync.
+  useEffect(() => {
+    if (!customer) {
+      lastCustomerIdRef.current = null;
+      return;
+    }
+    if (lastCustomerIdRef.current === customer.id) return;
+    lastCustomerIdRef.current = customer.id;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/cart", { cache: "no-store", credentials: "include" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const serverItems = Array.isArray(data?.items) ? data.items : [];
+        const localItems = state.items || [];
+        const merged = mergeCartItems(serverItems, localItems);
+        if (cancelled) return;
+        dispatch({ type: "LOAD_CART", payload: merged });
+        // Push merged cart back so server matches.
+        fetch("/api/cart", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ items: merged }),
+        }).catch(() => {});
+      } catch {}
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer?.id]);
+
+  // Debounced sync to server on subsequent local changes (only when authed).
+  useEffect(() => {
+    if (!hydratedRef.current || !customer) return;
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    syncTimerRef.current = setTimeout(() => {
+      fetch("/api/cart", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ items: state.items }),
+      }).catch(() => {});
+    }, 500);
+    return () => {
+      if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    };
+  }, [state.items, customer]);
 
   const addItem = (product, selectedSize, selectedColor, quantity = 1) => {
     dispatch({

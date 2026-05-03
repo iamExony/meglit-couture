@@ -1,27 +1,32 @@
+"use client";
 import Link from "next/link";
+import SubscribeForm from "./SubscribeForm";
 
 export default function Footer() {
   return (
-    <footer className="bg-royal-950 text-white">
+    <footer className="bg-brand-950 text-white" id="site-footer">
       {/* Main Footer */}
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
             <div className="mb-6">
-              <span className="font-heading text-3xl font-bold text-white">MEGLIT</span>
-              <span className="block text-xs tracking-[0.3em] text-gold-400 uppercase">Couture</span>
+              <span className="font-heading text-2xl font-bold text-white tracking-[0.08em]">MEGLIT</span>
+              <span className="block text-[9px] tracking-[0.35em] text-accent-400 uppercase font-medium">
+                Couture
+              </span>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Redefining elegance with our exclusive palazzo collections and premium branded fabrics.
-              Where sophistication meets African craftsmanship.
+            <p className="text-brand-300 text-sm leading-relaxed mb-6">
+              Redefining elegance with our exclusive palazzo collections and
+              premium branded fabrics. Where sophistication meets African
+              craftsmanship.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {["instagram", "facebook", "twitter", "tiktok"].map((social) => (
                 <a
                   key={social}
                   href="#"
-                  className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:border-gold-400 hover:text-gold-400 transition-colors"
+                  className="w-9 h-9 border border-brand-700 flex items-center justify-center text-brand-400 hover:border-accent-400 hover:text-accent-400 transition-colors"
                   aria-label={social}
                 >
                   <SocialIcon name={social} />
@@ -32,7 +37,9 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-heading text-lg font-semibold mb-6 text-gold-400">Quick Links</h3>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 text-accent-400">
+              Quick Links
+            </h3>
             <ul className="space-y-3">
               {[
                 { href: "/shop", label: "Shop All" },
@@ -42,7 +49,10 @@ export default function Footer() {
                 { href: "/contact", label: "Contact" },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-white transition-colors text-sm">
+                  <Link
+                    href={link.href}
+                    className="text-brand-300 hover:text-white transition-colors text-sm"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -52,7 +62,9 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h3 className="font-heading text-lg font-semibold mb-6 text-gold-400">Customer Service</h3>
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 text-accent-400">
+              Customer Service
+            </h3>
             <ul className="space-y-3">
               {[
                 "Shipping & Delivery",
@@ -62,7 +74,10 @@ export default function Footer() {
                 "Track Order",
               ].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                  <a
+                    href="#"
+                    className="text-brand-300 hover:text-white transition-colors text-sm"
+                  >
                     {item}
                   </a>
                 </li>
@@ -72,35 +87,32 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="font-heading text-lg font-semibold mb-6 text-gold-400">Stay Connected</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Subscribe for exclusive offers, new arrivals, and style inspiration.
+            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 text-accent-400">
+              Stay Connected
+            </h3>
+            <p className="text-brand-300 text-sm mb-4">
+              Subscribe for exclusive offers, new arrivals, and style
+              inspiration.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="w-full px-4 py-3 bg-white/10 border border-gray-700 rounded-sm text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-gold-400 transition-colors"
-              />
-              <button type="submit" className="btn-gold w-full">
-                Subscribe
-              </button>
-            </form>
+            <SubscribeForm variant="footer" source="footer" />
           </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-brand-800">
         <div className="container-custom py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">
+          <p className="text-brand-500 text-xs">
             © {new Date().getFullYear()} Meglit Couture. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-gray-500 text-xs">We accept:</span>
-            <div className="flex items-center gap-3">
+            <span className="text-brand-500 text-xs">We accept:</span>
+            <div className="flex items-center gap-2">
               {["Visa", "Mastercard", "Paystack"].map((p) => (
-                <span key={p} className="text-gray-400 text-xs px-2 py-1 border border-gray-700 rounded">
+                <span
+                  key={p}
+                  className="text-brand-400 text-[10px] px-2.5 py-1 border border-brand-700"
+                >
                   {p}
                 </span>
               ))}

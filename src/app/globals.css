@@ -1,20 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-royal-50: #eef2ff;
-  --color-royal-100: #dbe4ff;
-  --color-royal-200: #bac8ff;
-  --color-royal-300: #91a7ff;
-  --color-royal-400: #748ffc;
-  --color-royal-500: #4c6ef5;
-  --color-royal-600: #3b5bdb;
-  --color-royal-700: #2b4acb;
-  --color-royal-800: #1e3a8a;
-  --color-royal-900: #162d6e;
-  --color-royal-950: #0c1a42;
-  --color-gold-400: #d4a853;
-  --color-gold-500: #c9952e;
-  --color-gold-600: #b8860b;
+  --color-brand-50: #f8f6f3;
+  --color-brand-100: #f0ece6;
+  --color-brand-200: #e0d9cc;
+  --color-brand-300: #c9bda8;
+  --color-brand-400: #b5a38a;
+  --color-brand-500: #9e8868;
+  --color-brand-600: #8a7455;
+  --color-brand-700: #725f47;
+  --color-brand-800: #5e4e3c;
+  --color-brand-900: #4a3d30;
+  --color-brand-950: #2c2319;
+
+  --color-accent-50: #fdf8ee;
+  --color-accent-100: #f9ecd4;
+  --color-accent-200: #f2d5a5;
+  --color-accent-300: #eabd76;
+  --color-accent-400: #e4a64e;
+  --color-accent-500: #d4882b;
+  --color-accent-600: #bc6c20;
+  --color-accent-700: #9c511d;
+  --color-accent-800: #7f411e;
+  --color-accent-900: #68361c;
+  --color-accent-950: #3b1a0b;
+
+  --color-ink-50: #f6f6f6;
+  --color-ink-100: #e7e7e7;
+  --color-ink-200: #d1d1d1;
+  --color-ink-300: #b0b0b0;
+  --color-ink-400: #888888;
+  --color-ink-500: #6d6d6d;
+  --color-ink-600: #5d5d5d;
+  --color-ink-700: #4f4f4f;
+  --color-ink-800: #454545;
+  --color-ink-900: #3d3d3d;
+  --color-ink-950: #1a1a1a;
+
   --font-heading: "Playfair Display", serif;
   --font-body: "Inter", sans-serif;
 }
@@ -25,26 +47,33 @@
   }
   body {
     font-family: var(--font-body);
-    color: #1a1a2e;
+    color: var(--color-ink-950);
     background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    color: var(--color-brand-950);
+  }
+  ::selection {
+    background: var(--color-accent-200);
+    color: var(--color-brand-950);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-royal-800 text-white px-8 py-3 rounded-sm font-medium tracking-wide
-           hover:bg-royal-700 transition-all duration-300 uppercase text-sm;
+    @apply bg-brand-950 text-white px-8 py-3.5 font-medium tracking-wider
+           hover:bg-brand-800 transition-colors duration-200 uppercase text-xs;
   }
   .btn-secondary {
-    @apply border-2 border-royal-800 text-royal-800 px-8 py-3 rounded-sm font-medium tracking-wide
-           hover:bg-royal-800 hover:text-white transition-all duration-300 uppercase text-sm;
+    @apply border border-brand-950 text-brand-950 px-8 py-3.5 font-medium tracking-wider
+           hover:bg-brand-950 hover:text-white transition-colors duration-200 uppercase text-xs;
   }
-  .btn-gold {
-    @apply bg-gold-600 text-white px-8 py-3 rounded-sm font-medium tracking-wide
-           hover:bg-gold-500 transition-all duration-300 uppercase text-sm;
+  .btn-accent {
+    @apply bg-accent-600 text-white px-8 py-3.5 font-medium tracking-wider
+           hover:bg-accent-700 transition-colors duration-200 uppercase text-xs;
   }
   .section-padding {
     @apply px-4 sm:px-6 lg:px-8 xl:px-16 py-16 md:py-24;
@@ -52,20 +81,153 @@
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+  .section-label {
+    @apply text-accent-600 text-xs font-semibold tracking-[0.25em] uppercase;
+  }
+  .section-title {
+    @apply font-heading text-3xl md:text-4xl font-bold text-brand-950 mt-3 mb-4;
+  }
+  .section-divider {
+    @apply w-12 h-[2px] bg-accent-500 mx-auto mt-3;
+  }
 }
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
-::-webkit-scrollbar-thumb { background: #91a7ff; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #4c6ef5; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-brand-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand-500); }
 
+/* Animations */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-20px); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
   to { opacity: 1; transform: translateX(0); }
 }
-.animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
-.animate-slide-in { animation: slideIn 0.6s ease-out forwards; }
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes softPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slide-in-left { animation: slideInLeft 0.6s ease-out forwards; }
+.animate-slide-in-right { animation: slideInRight 0.6s ease-out forwards; }
+.animate-scale-in { animation: scaleIn 0.5s ease-out forwards; }
+.animate-float { animation: floatY 3.5s ease-in-out infinite; }
+.animate-soft-pulse { animation: softPulse 2.4s ease-in-out infinite; }
+.animate-spin-slow { animation: spinSlow 18s linear infinite; }
+
+/* Stagger helpers — apply data-stagger to a parent and a child index. */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* Reveal-on-scroll — start hidden, .is-visible triggers fadeInUp. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card lift hover — subtle. */
+.card-lift {
+  transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -22px rgba(44, 35, 25, 0.35);
+}
+
+/* Underline-on-hover (for nav links + footer links). */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Button press feedback — apply to .btn-primary/.btn-secondary/.btn-accent. */
+.btn-primary, .btn-secondary, .btn-accent {
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.25s ease;
+}
+.btn-primary:hover, .btn-secondary:hover, .btn-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -14px rgba(44, 35, 25, 0.55);
+}
+.btn-primary:active, .btn-secondary:active, .btn-accent:active {
+  transform: translateY(0);
+}
+
+/* Skeleton shimmer (loading state). */
+.skeleton {
+  background: linear-gradient(90deg, #efe9e0 0%, #f7f3ec 50%, #efe9e0 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-in,
+  .animate-float,
+  .animate-soft-pulse,
+  .animate-spin-slow,
+  .skeleton {
+    animation: none !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .card-lift:hover, .btn-primary:hover, .btn-secondary:hover, .btn-accent:hover { transform: none !important; }
+}

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "isolatedModules": true,
+    "lib": ["ES2021", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "types": []
+  },
+  "include": ["./**/*"],
+  "exclude": ["./_generated"]
+}
