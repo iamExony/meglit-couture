@@ -29,10 +29,21 @@ function ShopContent() {
     if (!products) return [];
     let result = [...products];
 
-    // Category filter — case-insensitive so "Wigs" matches slug "wigs"
+    // Category filter — resolve URL param (could be slug OR name) to the stored category name
     if (selectedCategory !== "all") {
+      const sel = selectedCategory.toLowerCase();
+      // Find the category doc whose slug OR name matches the URL param
+      const matchedCat = categories.find(
+        (c) =>
+          String(c.slug || "").toLowerCase() === sel ||
+          String(c.name || "").toLowerCase() === sel
+      );
+      // Use the canonical category name from the DB; fall back to the raw param
+      const targetLower = matchedCat
+        ? String(matchedCat.name).toLowerCase()
+        : sel;
       result = result.filter(
-        (p) => String(p.category || "").toLowerCase() === selectedCategory.toLowerCase()
+        (p) => String(p.category || "").toLowerCase() === targetLower
       );
     }
 
@@ -61,7 +72,7 @@ function ShopContent() {
     else if (sortBy === "newest") result.sort((a, b) => (b.newArrival ? 1 : 0) - (a.newArrival ? 1 : 0));
 
     return result;
-  }, [products, selectedCategory, sortBy, priceRange, filterParam]);
+  }, [products, categories, selectedCategory, sortBy, priceRange, filterParam]);
 
   return (
     <>

@@ -81,7 +81,7 @@ export default function CategorySection() {
           {items.map((cat, i) => (
             <Reveal key={cat._id || cat.slug} delay={i * 80}>
               <Link
-                href={`/shop?category=${encodeURIComponent(cat.slug)}`}
+                href={`/shop?category=${encodeURIComponent(cat.name)}`}
                 className="group block card-lift"
                 id={`category-${cat.slug}`}
               >
