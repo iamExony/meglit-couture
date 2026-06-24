@@ -113,7 +113,7 @@ export default function TestimonialSection() {
               <div
                 key={`${current}-${i}`}
                 className="bg-white/[0.06] border border-white/[0.08] p-8 transition-all duration-300 hover:bg-white/[0.09] hover:border-accent-400/40 hover:-translate-y-1"
-                id={`testimonial-${current * PER_SLIDE + i}`}
+                id={`testimonial-${current * perSlide + i}`}
               >
                 {/* Stars */}
                 <div className="flex gap-1 mb-5">
