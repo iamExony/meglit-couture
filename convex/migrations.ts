@@ -923,6 +923,147 @@ export const debugCategories = mutation({
   },
 });
 
+// Show all categories in the categories table.
+export const debugCategoryDocs = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const cats = await ctx.db.query("categories").collect();
+    return cats.map((c) => ({ name: c.name, slug: c.slug }));
+  },
+});
+
+// Fix category DOCUMENTS with wrong names/slugs, and seed 5 more fabric products.
+export const fixFabricCategory = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const PX = (id: number) =>
+      `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+
+    // Fix "Branded Fabrics" → "Fabrics" and slug "fabric" → "fabrics"
+    const stale = ["Branded Fabrics", "fabric", "Fabric"];
+    const allCats = await ctx.db.query("categories").collect();
+    let catsFixed = 0;
+    for (const cat of allCats) {
+      if (stale.includes(cat.name) || cat.slug === "fabric") {
+        await ctx.db.patch(cat._id, { name: "Fabrics", slug: "fabrics" });
+        catsFixed++;
+      }
+      // Fix "Palazzo Collection" name
+      if (cat.name === "Palazzo Collection") {
+        await ctx.db.patch(cat._id, { name: "Palazzo" });
+        catsFixed++;
+      }
+    }
+
+    // Also ensure a canonical "Fabrics" category exists
+    const fabricsCat = await ctx.db.query("categories").filter((q) => q.eq(q.field("slug"), "fabrics")).first();
+    if (!fabricsCat) {
+      await ctx.db.insert("categories", {
+        name: "Fabrics",
+        slug: "fabrics",
+        description: "Premium branded fabrics, Ankara, lace, Swiss voile and more",
+        subcategories: ["Ankara", "Lace", "Swiss Voile", "Jacquard", "Satin", "Chiffon"],
+        createdAt: Date.now(),
+      });
+      catsFixed++;
+    }
+
+    // Seed 5 more distinct fabric products
+    const products = [
+      {
+        name: "Luxury Lace Embroidered Fabric",
+        slug: "luxury-lace-embroidered-fabric",
+        price: 14500,
+        originalPrice: 18000,
+        category: "Fabrics",
+        subcategory: "Lace",
+        description: "Exquisite French-style lace with delicate floral embroidery. Soft, sheer and elegant — perfect for bridal wear, evening gowns and special occasion outfits.",
+        details: ["Width: 120cm", "Length sold per yard", "Material: Polyester lace with embroidery", "Weight: Lightweight", "Care: Hand wash cold"],
+        sizes: ["1 Yard", "2 Yards", "3 Yards", "5 Yards"],
+        colors: [{ name: "Ivory White", hex: "#fffff0" }, { name: "Champagne", hex: "#f7e7ce" }, { name: "Black", hex: "#000000" }],
+        images: [PX(7319081), PX(6193110)],
+        stock: 80, inStock: true, featured: true, badge: "Best Seller",
+        tags: ["Lace", "Embroidered", "Bridal", "Sheer", "Floral", "Evening", "Wedding"],
+        rating: 4.9, reviews: 54, createdAt: Date.now() - 1000,
+      },
+      {
+        name: "Premium Ankara Print Fabric",
+        slug: "premium-ankara-print-fabric",
+        price: 6500,
+        originalPrice: 8500,
+        category: "Fabrics",
+        subcategory: "Ankara",
+        description: "Bold, vibrant Ankara wax print fabric with authentic African geometric patterns. 100% cotton, pre-washed and colour-fast. Ideal for dresses, skirts, head wraps and fashion accessories.",
+        details: ["Width: 110cm", "Length sold per yard", "Material: 100% Cotton wax print", "Pre-washed, colour-fast", "Care: Machine wash warm"],
+        sizes: ["1 Yard", "2 Yards", "3 Yards", "5 Yards", "10 Yards"],
+        colors: [{ name: "Multi-colour", hex: "#e55a2b" }, { name: "Blue & Gold", hex: "#1a3a6b" }, { name: "Green & Red", hex: "#2d6a2d" }],
+        images: [PX(6626903), PX(6626918)],
+        stock: 150, inStock: true, featured: true, badge: "New Arrival",
+        tags: ["Ankara", "African Print", "Cotton", "Wax Print", "Colourful", "Casual", "Everyday"],
+        rating: 4.7, reviews: 88, createdAt: Date.now() - 2000,
+      },
+      {
+        name: "Swiss Voile Lace Fabric",
+        slug: "swiss-voile-lace-fabric",
+        price: 22000,
+        originalPrice: 28000,
+        category: "Fabrics",
+        subcategory: "Swiss Voile",
+        description: "Genuine Swiss voile lace with intricate embroidered borders. Known for its crisp texture, breathability and luxurious feel — the number one choice for Nigerian aso-ebi and formal attire.",
+        details: ["Width: 150cm", "Length sold per 5-yard piece", "Material: Swiss cotton voile with lace border", "Breathable & lightweight", "Care: Dry clean recommended"],
+        sizes: ["5 Yards", "10 Yards"],
+        colors: [{ name: "White", hex: "#ffffff" }, { name: "Cream", hex: "#fffdd0" }, { name: "Baby Pink", hex: "#f4c2c2" }, { name: "Sky Blue", hex: "#87ceeb" }],
+        images: [PX(7319081), PX(4993160)],
+        stock: 45, inStock: true, featured: true, badge: "Best Seller",
+        tags: ["Swiss Voile", "Lace", "Aso-ebi", "Formal", "Breathable", "Nigerian", "Wedding"],
+        rating: 4.9, reviews: 72, createdAt: Date.now() - 3000,
+      },
+      {
+        name: "Jacquard Brocade Fabric",
+        slug: "jacquard-brocade-fabric",
+        price: 18000,
+        originalPrice: 24000,
+        category: "Fabrics",
+        subcategory: "Jacquard",
+        description: "Rich Jacquard brocade with woven-in floral and geometric patterns that shimmer under light. Structured and substantial — excellent for suits, blazers, ankara-style tops and statement pieces.",
+        details: ["Width: 140cm", "Length sold per yard", "Material: Polyester Jacquard", "Self-patterned weave", "Care: Dry clean only"],
+        sizes: ["1 Yard", "2 Yards", "3 Yards", "5 Yards"],
+        colors: [{ name: "Gold & Black", hex: "#c9a84c" }, { name: "Royal Blue", hex: "#1a1a6b" }, { name: "Wine & Gold", hex: "#722f37" }],
+        images: [PX(4993160), PX(4855416)],
+        stock: 60, inStock: true, featured: false, badge: "",
+        tags: ["Jacquard", "Brocade", "Structured", "Formal", "Shimmer", "Statement", "Suits"],
+        rating: 4.8, reviews: 41, createdAt: Date.now() - 4000,
+      },
+      {
+        name: "Satin Charmeuse Fabric",
+        slug: "satin-charmeuse-fabric",
+        price: 9500,
+        originalPrice: 13000,
+        category: "Fabrics",
+        subcategory: "Satin",
+        description: "Ultra-smooth satin charmeuse with a gorgeous liquid drape. The luminous sheen makes it a top pick for evening wear, palazzo sets, linings and luxe blouses.",
+        details: ["Width: 140cm", "Length sold per yard", "Material: Polyester satin charmeuse", "Lightweight, silky drape", "Care: Hand wash cold or dry clean"],
+        sizes: ["1 Yard", "2 Yards", "3 Yards", "5 Yards"],
+        colors: [{ name: "Champagne", hex: "#f7e7ce" }, { name: "Blush Pink", hex: "#ffb6c1" }, { name: "Midnight Blue", hex: "#191970" }, { name: "Emerald", hex: "#50c878" }],
+        images: [PX(3812584), PX(6069093)],
+        stock: 90, inStock: true, featured: false, badge: "New Arrival",
+        tags: ["Satin", "Charmeuse", "Silky", "Evening", "Drape", "Luxe", "Blouse", "Palazzo"],
+        rating: 4.6, reviews: 35, createdAt: Date.now() - 5000,
+      },
+    ];
+
+    let prodsAdded = 0;
+    for (const p of products) {
+      const exists = await ctx.db.query("products").withIndex("by_slug", (q) => q.eq("slug", p.slug)).first();
+      if (!exists) {
+        await ctx.db.insert("products", p);
+        prodsAdded++;
+      }
+    }
+    return { catsFixed, prodsAdded };
+  },
+});
+
 // Fix any remaining fabric/palazzo/branded category name variants to ensure shop filter works.
 export const fixCategoryNames = mutation({
   args: {},
