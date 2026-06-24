@@ -134,6 +134,39 @@ const NAV_MENUS = [
     ],
   },
   {
+    label: "Perfume",
+    href: "/shop?category=Eau+de+Parfum",
+    columns: [
+      {
+        title: "Fragrance Type",
+        links: [
+          { label: "Eau de Parfum", href: "/shop?category=Eau+de+Parfum" },
+          { label: "Eau de Toilette", href: "/shop?category=Eau+de+Toilette" },
+          { label: "Body Mist & Spray", href: "/shop?category=Body+Mist+%26+Spray" },
+          { label: "Perfume Oil", href: "/shop?category=Perfume+Oil" },
+        ],
+      },
+      {
+        title: "By Gender",
+        links: [
+          { label: "For Her", href: "/shop?category=Eau+de+Parfum&sub=Women%27s+EDP" },
+          { label: "For Him", href: "/shop?category=Eau+de+Parfum&sub=Men%27s+EDP" },
+          { label: "Unisex", href: "/shop?category=Eau+de+Parfum&sub=Unisex+EDP" },
+          { label: "Arabian Oud", href: "/shop?category=Perfume+Oil" },
+        ],
+      },
+      {
+        title: "Collections",
+        links: [
+          { label: "Fragrance Sets", href: "/shop?category=Fragrance+Sets" },
+          { label: "Travel Minis", href: "/shop?category=Fragrance+Sets&sub=Mini+Travel+Sets" },
+          { label: "Gift Sets", href: "/shop?category=Fragrance+Sets&sub=Gift+Sets" },
+          { label: "View All Perfume →", href: "/shop?category=Eau+de+Parfum" },
+        ],
+      },
+    ],
+  },
+  {
     label: "Palazzo",
     href: "/shop?category=Palazzo",
     columns: [

@@ -30,6 +30,12 @@ export default function CategorySection() {
     sandals: PX(10827097),
     "sneakers-casual": PX(1598505),
     boots: PX(31450744),
+    // perfume
+    "eau-de-parfum": PX(965989),
+    "eau-de-toilette": PX(1190829),
+    "body-mist-spray": PX(1587927),
+    "perfume-oil": PX(4110101),
+    "fragrance-sets": PX(3059610),
     // jewelry
     earrings: PX(5985085),
     "bangles-bracelets": PX(3266700),

@@ -90,19 +90,38 @@ const JEWELRY_TAG_GROUPS = [
   { label: "Occasion", tags: ["Everyday Wear", "Formal", "Wedding", "Party", "Office", "Gift"] },
 ];
 
+// ── Perfume ───────────────────────────────────────────────────────────────────
+const PERFUME_CATEGORIES = [
+  { name: "Eau de Parfum",    subcategories: ["Women's EDP", "Men's EDP", "Unisex EDP"] },
+  { name: "Eau de Toilette",  subcategories: ["Women's EDT", "Men's EDT", "Unisex EDT"] },
+  { name: "Body Mist & Spray", subcategories: ["Women's Body Mist", "Men's Body Mist", "Unisex Body Mist"] },
+  { name: "Perfume Oil",      subcategories: ["Roll-on Oils", "Concentrated Perfume Oils"] },
+  { name: "Fragrance Sets",   subcategories: ["Gift Sets", "Mini Travel Sets", "Matching Body Sets"] },
+];
+const PERFUME_TAG_GROUPS = [
+  { label: "Scent Family", tags: ["Floral", "Fruity", "Woody", "Oriental", "Fresh", "Citrus", "Musky", "Gourmand", "Aquatic", "Spicy", "Amber", "Powdery"] },
+  { label: "Concentration", tags: ["Eau de Parfum (EDP)", "Eau de Toilette (EDT)", "Parfum / Extrait", "Body Mist", "Perfume Oil", "Cologne"] },
+  { label: "Gender", tags: ["For Her", "For Him", "Unisex"] },
+  { label: "Top Notes", tags: ["Rose", "Jasmine", "Bergamot", "Lemon", "Orange", "Lavender", "Vanilla", "Oud", "Sandalwood", "Musk", "Cedarwood", "Patchouli"] },
+  { label: "Occasion", tags: ["Everyday", "Evening", "Office", "Date Night", "Wedding", "Summer", "Winter", "Gift"] },
+  { label: "Brand Type", tags: ["Niche Fragrance", "Designer", "Arabian Oud", "Local Brand", "Luxury"] },
+];
+
 // ── Unified helpers ────────────────────────────────────────────────────────────
-const ALL_CUSTOM_CATEGORIES = [...HAIR_CATEGORIES, ...BAG_CATEGORIES, ...SHOE_CATEGORIES, ...JEWELRY_CATEGORIES];
-const HAIR_CAT_NAMES    = new Set(HAIR_CATEGORIES.map((c) => c.name));
-const BAG_CAT_NAMES     = new Set(BAG_CATEGORIES.map((c) => c.name));
-const SHOE_CAT_NAMES    = new Set(SHOE_CATEGORIES.map((c) => c.name));
-const JEWELRY_CAT_NAMES = new Set(JEWELRY_CATEGORIES.map((c) => c.name));
+const ALL_CUSTOM_CATEGORIES = [...HAIR_CATEGORIES, ...BAG_CATEGORIES, ...SHOE_CATEGORIES, ...JEWELRY_CATEGORIES, ...PERFUME_CATEGORIES];
+const HAIR_CAT_NAMES     = new Set(HAIR_CATEGORIES.map((c) => c.name));
+const BAG_CAT_NAMES      = new Set(BAG_CATEGORIES.map((c) => c.name));
+const SHOE_CAT_NAMES     = new Set(SHOE_CATEGORIES.map((c) => c.name));
+const JEWELRY_CAT_NAMES  = new Set(JEWELRY_CATEGORIES.map((c) => c.name));
+const PERFUME_CAT_NAMES  = new Set(PERFUME_CATEGORIES.map((c) => c.name));
 
 function getTagGroups(category) {
   if (HAIR_CAT_NAMES.has(category))    return HAIR_TAG_GROUPS;
   if (BAG_CAT_NAMES.has(category))     return BAG_TAG_GROUPS;
   if (SHOE_CAT_NAMES.has(category))    return SHOE_TAG_GROUPS;
   if (JEWELRY_CAT_NAMES.has(category)) return JEWELRY_TAG_GROUPS;
-  return [...HAIR_TAG_GROUPS, ...BAG_TAG_GROUPS, ...SHOE_TAG_GROUPS, ...JEWELRY_TAG_GROUPS];
+  if (PERFUME_CAT_NAMES.has(category)) return PERFUME_TAG_GROUPS;
+  return [...HAIR_TAG_GROUPS, ...BAG_TAG_GROUPS, ...SHOE_TAG_GROUPS, ...JEWELRY_TAG_GROUPS, ...PERFUME_TAG_GROUPS];
 }
 
 function normalizeColor(c) {

@@ -789,3 +789,122 @@ export const seedJewelry = mutation({
     return { catsAdded, prodsAdded };
   },
 });
+
+// Seed perfume categories and 5 demo perfume products.
+export const seedPerfume = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const PX = (id: number) =>
+      `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+
+    const perfumeCats = [
+      { name: "Eau de Parfum",    slug: "eau-de-parfum",    description: "Long-lasting luxury fragrances with high concentration", subcategories: ["Women's EDP", "Men's EDP", "Unisex EDP"] },
+      { name: "Eau de Toilette",  slug: "eau-de-toilette",  description: "Light everyday fragrances for all-day freshness",       subcategories: ["Women's EDT", "Men's EDT", "Unisex EDT"] },
+      { name: "Body Mist & Spray", slug: "body-mist-spray", description: "Light refreshing body sprays and mists",                subcategories: ["Women's Body Mist", "Men's Body Mist", "Unisex Body Mist"] },
+      { name: "Perfume Oil",      slug: "perfume-oil",      description: "Concentrated roll-on and Arabian perfume oils",         subcategories: ["Roll-on Oils", "Concentrated Perfume Oils"] },
+      { name: "Fragrance Sets",   slug: "fragrance-sets",   description: "Curated fragrance gift sets and travel minis",          subcategories: ["Gift Sets", "Mini Travel Sets", "Matching Body Sets"] },
+    ];
+
+    let catsAdded = 0;
+    for (const cat of perfumeCats) {
+      const exists = await ctx.db.query("categories").filter((q) => q.eq(q.field("slug"), cat.slug)).first();
+      if (!exists) {
+        await ctx.db.insert("categories", { ...cat, createdAt: Date.now() });
+        catsAdded++;
+      }
+    }
+
+    const products = [
+      {
+        name: "Rose Oud Eau de Parfum",
+        slug: "rose-oud-eau-de-parfum",
+        price: 18500,
+        originalPrice: 25000,
+        category: "Eau de Parfum",
+        subcategory: "Women's EDP",
+        description: "A captivating blend of fresh Bulgarian rose and rich Arabian oud. Opens with bright citrus, blooms into rose and jasmine, dries down to warm oud that lingers for hours.",
+        details: ["100ml bottle", "Concentration: Eau de Parfum", "Top notes: Rose, Bergamot", "Heart notes: Jasmine, Iris", "Base notes: Oud, Sandalwood, Musk", "Long-lasting 8–10 hours"],
+        sizes: ["30ml", "50ml", "100ml"],
+        colors: [],
+        images: [PX(965989), PX(1190829)],
+        stock: 40, inStock: true, featured: true, badge: "Best Seller",
+        tags: ["Eau de Parfum (EDP)", "For Her", "Floral", "Oriental", "Rose", "Oud", "Sandalwood", "Musk", "Evening", "Wedding", "Luxury"],
+        rating: 4.9, reviews: 62, createdAt: Date.now() - 1000,
+      },
+      {
+        name: "Citrus Breeze Eau de Toilette",
+        slug: "citrus-breeze-eau-de-toilette",
+        price: 11000,
+        originalPrice: 15000,
+        category: "Eau de Toilette",
+        subcategory: "Unisex EDT",
+        description: "A refreshing unisex fragrance capturing the zesty energy of sun-ripened citrus. Light, vibrant and perfect for everyday wear.",
+        details: ["75ml bottle", "Concentration: Eau de Toilette", "Top notes: Lemon, Bergamot, Orange", "Heart notes: Green Tea, Lily of the Valley", "Base notes: Cedarwood, Vetiver", "Lasts 4–6 hours"],
+        sizes: ["50ml", "75ml"],
+        colors: [],
+        images: [PX(1190829), PX(965989)],
+        stock: 55, inStock: true, featured: false, badge: "New Arrival",
+        tags: ["Eau de Toilette (EDT)", "Unisex", "Fresh", "Citrus", "Lemon", "Bergamot", "Cedarwood", "Everyday", "Summer", "Office"],
+        rating: 4.6, reviews: 38, createdAt: Date.now() - 2000,
+      },
+      {
+        name: "Vanilla Musk Body Mist",
+        slug: "vanilla-musk-body-mist",
+        price: 4500,
+        originalPrice: 6500,
+        category: "Body Mist & Spray",
+        subcategory: "Women's Body Mist",
+        description: "A soft, skin-loving body mist with warm vanilla and clean musk. Lightweight enough to layer or wear alone for a subtle feminine glow.",
+        details: ["250ml bottle", "Alcohol-free formula", "Moisturising mist", "Suitable for sensitive skin", "Notes: Vanilla, Coconut, Jasmine, Peony, Musk, Amber"],
+        sizes: ["150ml", "250ml"],
+        colors: [],
+        images: [PX(1587927), PX(3059610)],
+        stock: 70, inStock: true, featured: false, badge: "",
+        tags: ["Body Mist", "For Her", "Gourmand", "Musky", "Vanilla", "Musk", "Jasmine", "Everyday", "Summer"],
+        rating: 4.5, reviews: 29, createdAt: Date.now() - 3000,
+      },
+      {
+        name: "Midnight Oud Perfume Oil",
+        slug: "midnight-oud-perfume-oil",
+        price: 8500,
+        originalPrice: 12000,
+        category: "Perfume Oil",
+        subcategory: "Concentrated Perfume Oils",
+        description: "A concentrated Arabian-inspired perfume oil. Rich oud heart wrapped in dark amber and sweet vanilla. A few drops on pulse points deliver intense, long-lasting fragrance.",
+        details: ["12ml roll-on bottle", "Alcohol-free — no drying", "Highly concentrated formula", "Halal-friendly", "Notes: Saffron, Cardamom, Oud, Rose, Amber, Musk, Vanilla"],
+        sizes: ["6ml", "12ml"],
+        colors: [],
+        images: [PX(4110101), PX(965989)],
+        stock: 35, inStock: true, featured: true, badge: "Limited Edition",
+        tags: ["Perfume Oil", "Unisex", "Oriental", "Woody", "Oud", "Amber", "Musk", "Arabian Oud", "Evening", "Date Night", "Luxury"],
+        rating: 4.8, reviews: 44, createdAt: Date.now() - 4000,
+      },
+      {
+        name: "Luxury Fragrance Gift Set",
+        slug: "luxury-fragrance-gift-set",
+        price: 27500,
+        originalPrice: 38000,
+        category: "Fragrance Sets",
+        subcategory: "Gift Sets",
+        description: "The ultimate fragrance gift — a curated trio of bestselling scents in a premium box. Includes Rose Oud EDP, Midnight Oud Oil, and Vanilla Musk Body Mist.",
+        details: ["3-piece set", "Includes: 50ml EDP + 12ml Oil + 150ml Body Mist", "Premium gift box with ribbon", "Perfect for birthdays and celebrations", "Presented in branded packaging"],
+        sizes: [],
+        colors: [],
+        images: [PX(3059610), PX(1190829)],
+        stock: 20, inStock: true, featured: true, badge: "Limited Edition",
+        tags: ["Gift Sets", "For Her", "Floral", "Oriental", "Oud", "Vanilla", "Musk", "Gift", "Wedding", "Luxury"],
+        rating: 4.9, reviews: 17, createdAt: Date.now() - 5000,
+      },
+    ];
+
+    let prodsAdded = 0;
+    for (const p of products) {
+      const exists = await ctx.db.query("products").withIndex("by_slug", (q) => q.eq("slug", p.slug)).first();
+      if (!exists) {
+        await ctx.db.insert("products", p);
+        prodsAdded++;
+      }
+    }
+    return { catsAdded, prodsAdded };
+  },
+});
