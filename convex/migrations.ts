@@ -909,6 +909,24 @@ export const seedPerfume = mutation({
   },
 });
 
+// Seed the default announcement bar entry.
+export const seedAnnouncement = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const exists = await ctx.db.query("announcements").first();
+    if (exists) return { seeded: 0 };
+    await ctx.db.insert("announcements", {
+      message: "Free delivery on orders over ₦50,000",
+      code: "MEGLIT10",
+      type: "free-delivery",
+      isPublished: true,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+    return { seeded: 1 };
+  },
+});
+
 // Show distinct category values stored on products for debugging.
 export const debugCategories = mutation({
   args: {},

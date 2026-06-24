@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { useCart } from "@/context/CartContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 
@@ -205,6 +207,7 @@ export default function Navbar() {
   const { customer, signOut, loading } = useCustomerAuth();
   const accountRef = useRef(null);
   const menuTimeoutRef = useRef(null);
+  const announcement = useQuery(api.announcements.getActive, {});
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -231,11 +234,17 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Announcement bar */}
-      <div className="bg-brand-950 text-white text-center py-2.5 text-[11px] sm:text-xs tracking-[0.15em] uppercase">
-        Free delivery on orders over ₦50,000 &mdash; Code:{" "}
-        <span className="text-accent-400 font-semibold">MEGLIT10</span>
-      </div>
+      {/* Announcement bar — dynamic from admin */}
+      {announcement && (
+        <div className="bg-brand-950 text-white text-center py-2.5 text-[11px] sm:text-xs tracking-[0.15em] uppercase">
+          {announcement.message}
+          {announcement.code && (
+            <> &mdash; Code:{" "}
+              <span className="text-accent-400 font-semibold">{announcement.code}</span>
+            </>
+          )}
+        </div>
+      )}
 
       <nav
         className={`sticky top-0 z-50 transition-all duration-200 border-b ${

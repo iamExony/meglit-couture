@@ -197,6 +197,16 @@ export default defineSchema({
     updatedBy: v.optional(v.string()),
   }).index("by_key", ["key"]),
 
+  // Site-wide announcement bar (flash sales, promos, free delivery notices).
+  announcements: defineTable({
+    message: v.string(),
+    code: v.optional(v.string()),
+    type: v.string(), // "free-delivery" | "flash-sale" | "promo" | "general"
+    isPublished: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_published", ["isPublished"]),
+
   // Inbound contact-us messages (also emailed to info@).
   contactMessages: defineTable({
     name: v.string(),
