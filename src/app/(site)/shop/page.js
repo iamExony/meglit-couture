@@ -154,9 +154,72 @@ function ShopContent() {
             </div>
           </div>
 
+          {/* Mobile Filter Drawer — bottom sheet overlay, products always visible */}
+          {showFilters && (
+            <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
+              <div
+                className="absolute inset-0 bg-black/50"
+                onClick={() => setShowFilters(false)}
+              />
+              <div className="relative bg-white rounded-t-2xl shadow-2xl max-h-[80vh] overflow-y-auto">
+                <div className="p-5">
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="font-heading text-base font-semibold text-brand-950">Filters</h3>
+                    <button
+                      onClick={() => setShowFilters(false)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-brand-100 hover:bg-brand-200 transition-colors"
+                      aria-label="Close filters"
+                    >
+                      <svg className="w-4 h-4 text-brand-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="mb-6">
+                    <h4 className="text-[11px] font-semibold text-ink-700 mb-3 uppercase tracking-[0.12em]">Price Range</h4>
+                    {[
+                      { value: "all", label: "All Prices" },
+                      { value: "under-20k", label: "Under ₦20,000" },
+                      { value: "20k-35k", label: "₦20,000 - ₦35,000" },
+                      { value: "35k-50k", label: "₦35,000 - ₦50,000" },
+                      { value: "above-50k", label: "Above ₦50,000" },
+                    ].map((range) => (
+                      <label key={range.value} className="flex items-center gap-2 mb-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="price-mobile"
+                          checked={priceRange === range.value}
+                          onChange={() => setPriceRange(range.value)}
+                          className="accent-brand-950 w-3.5 h-3.5"
+                        />
+                        <span className="text-xs text-ink-600">{range.label}</span>
+                      </label>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => { setSelectedCategory("all"); setPriceRange("all"); setSortBy("featured"); }}
+                      className="flex-1 py-2.5 text-xs border border-brand-200 text-ink-600 font-medium uppercase tracking-[0.1em] hover:border-brand-950 transition-colors"
+                    >
+                      Reset
+                    </button>
+                    <button
+                      onClick={() => setShowFilters(false)}
+                      className="flex-1 py-2.5 text-xs bg-brand-950 text-white font-medium uppercase tracking-[0.1em]"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-8">
-            {/* Sidebar Filters - Desktop */}
-            <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-52 flex-shrink-0`}>
+            {/* Sidebar Filters - Desktop only */}
+            <div className="hidden md:block w-52 flex-shrink-0">
               <div className="bg-white p-6 border border-brand-100 sticky top-24">
                 <h3 className="font-heading text-base font-semibold text-brand-950 mb-5">Filters</h3>
 
