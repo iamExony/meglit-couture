@@ -81,60 +81,65 @@ function ShopContent() {
       <section className="section-padding bg-brand-50" id="shop-products">
         <div className="container-custom">
           {/* Toolbar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* Category tabs */}
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={`px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-medium transition-colors ${
-                  selectedCategory === "all"
-                    ? "bg-brand-950 text-white"
-                    : "bg-white text-ink-600 hover:text-brand-950 border border-brand-200"
-                }`}
-                id="filter-all"
-              >
-                All
-              </button>
-              {categories.map((cat) => (
+          <div className="mb-6">
+            {/* Top row: count + sort + mobile filter toggle */}
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <span className="text-xs text-ink-400">{filteredProducts.length} products</span>
+              <div className="flex items-center gap-2">
                 <button
-                  key={cat._id || cat.slug}
-                  onClick={() => setSelectedCategory(cat.slug)}
-                  className={`px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-medium transition-colors ${
-                    selectedCategory === cat.slug
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] text-ink-600 bg-white border border-brand-200 hover:text-brand-950 transition-colors md:hidden"
+                  id="toggle-filters"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  Filters
+                </button>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-3 py-1.5 text-xs bg-white border border-brand-200 focus:outline-none focus:border-brand-950 text-ink-700"
+                  id="sort-select"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="newest">Newest</option>
+                  <option value="price-low">Price: Low → High</option>
+                  <option value="price-high">Price: High → Low</option>
+                  <option value="rating">Top Rated</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Category tabs — horizontal scroll on mobile, wrap on desktop */}
+            <div className="overflow-x-auto -mx-4 sm:mx-0" style={{ scrollbarWidth: "none" }}>
+              <div className="flex items-center gap-2 px-4 sm:px-0 sm:flex-wrap pb-1 sm:pb-0 w-max sm:w-auto">
+                <button
+                  onClick={() => setSelectedCategory("all")}
+                  className={`whitespace-nowrap px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-medium transition-colors flex-shrink-0 ${
+                    selectedCategory === "all"
                       ? "bg-brand-950 text-white"
                       : "bg-white text-ink-600 hover:text-brand-950 border border-brand-200"
                   }`}
-                  id={`filter-${cat.slug}`}
+                  id="filter-all"
                 >
-                  {cat.name}
+                  All
                 </button>
-              ))}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 text-[11px] text-ink-600 bg-white border border-brand-200 hover:text-brand-950 transition-colors md:hidden"
-                id="toggle-filters"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                Filters
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="text-xs text-ink-400">{filteredProducts.length} products</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 text-xs bg-white border border-brand-200 focus:outline-none focus:border-brand-950 text-ink-700"
-                id="sort-select"
-              >
-                <option value="featured">Featured</option>
-                <option value="newest">Newest</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
+                {categories.map((cat) => (
+                  <button
+                    key={cat._id || cat.slug}
+                    onClick={() => setSelectedCategory(cat.name)}
+                    className={`whitespace-nowrap px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-medium transition-colors flex-shrink-0 ${
+                      selectedCategory.toLowerCase() === cat.name.toLowerCase()
+                        ? "bg-brand-950 text-white"
+                        : "bg-white text-ink-600 hover:text-brand-950 border border-brand-200"
+                    }`}
+                    id={`filter-${cat.slug}`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

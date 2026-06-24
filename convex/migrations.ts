@@ -908,3 +908,39 @@ export const seedPerfume = mutation({
     return { catsAdded, prodsAdded };
   },
 });
+
+// Show distinct category values stored on products for debugging.
+export const debugCategories = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("products").collect();
+    const counts: Record<string, number> = {};
+    for (const p of all) {
+      const cat = String(p.category || "(none)");
+      counts[cat] = (counts[cat] || 0) + 1;
+    }
+    return counts;
+  },
+});
+
+// Fix any remaining fabric/palazzo/branded category name variants to ensure shop filter works.
+export const fixCategoryNames = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("products").collect();
+    let fixed = 0;
+    for (const p of all) {
+      const cat = String(p.category || "");
+      const lower = cat.toLowerCase();
+      let correct: string | null = null;
+      if (lower === "fabric" || lower === "fabrics" || lower === "branded fabrics") correct = "Fabrics";
+      else if (lower === "palazzo") correct = "Palazzo";
+      else if (lower === "love wears" || lower === "uncategorized") correct = "Fabrics";
+      if (correct && cat !== correct) {
+        await ctx.db.patch(p._id, { category: correct });
+        fixed++;
+      }
+    }
+    return { fixed };
+  },
+});

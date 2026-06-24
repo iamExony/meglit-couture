@@ -47,9 +47,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const PER_SLIDE = 3;
-const TOTAL_SLIDES = Math.ceil(TESTIMONIALS.length / PER_SLIDE);
-
 const StarIcon = () => (
   <svg className="w-3.5 h-3.5 text-accent-400" fill="currentColor" viewBox="0 0 20 20">
     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -59,6 +56,18 @@ const StarIcon = () => (
 export default function TestimonialSection() {
   const [current, setCurrent] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [perSlide, setPerSlide] = useState(3);
+
+  useEffect(() => {
+    const update = () => setPerSlide(window.innerWidth < 768 ? 1 : 3);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  useEffect(() => { setCurrent(0); }, [perSlide]);
+
+  const totalSlides = Math.ceil(TESTIMONIALS.length / perSlide);
 
   const goTo = useCallback((idx) => {
     setVisible(false);
@@ -68,15 +77,15 @@ export default function TestimonialSection() {
     }, 220);
   }, []);
 
-  const next = useCallback(() => goTo((current + 1) % TOTAL_SLIDES), [current, goTo]);
-  const prev = () => goTo((current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
+  const next = useCallback(() => goTo((current + 1) % totalSlides), [current, goTo, totalSlides]);
+  const prev = () => goTo((current - 1 + totalSlides) % totalSlides);
 
   useEffect(() => {
     const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
   }, [next]);
 
-  const slide = TESTIMONIALS.slice(current * PER_SLIDE, current * PER_SLIDE + PER_SLIDE);
+  const slide = TESTIMONIALS.slice(current * perSlide, current * perSlide + perSlide);
 
   return (
     <section className="section-padding bg-brand-950" id="testimonials-section">
@@ -147,7 +156,7 @@ export default function TestimonialSection() {
 
             {/* Dots */}
             <div className="flex gap-2">
-              {[...Array(TOTAL_SLIDES)].map((_, i) => (
+              {[...Array(totalSlides)].map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
