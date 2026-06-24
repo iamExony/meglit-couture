@@ -44,7 +44,7 @@ export default function Footer() {
               {[
                 { href: "/shop", label: "Shop All" },
                 { href: "/shop?category=palazzo", label: "Palazzo Collection" },
-                { href: "/shop?category=fabric", label: "Branded Fabrics" },
+                { href: "/shop?category=Fabrics", label: "Fabrics" },
                 { href: "/about", label: "About Us" },
                 { href: "/contact", label: "Contact" },
               ].map((link) => (

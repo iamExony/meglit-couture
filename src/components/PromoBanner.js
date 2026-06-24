@@ -46,7 +46,7 @@ export default function PromoBanner() {
               <p className="text-brand-300 text-sm mb-5 max-w-xs">
                 Explore our latest collection of premium branded fabrics.
               </p>
-              <Link href="/shop?category=fabric" className="btn-accent self-start">
+              <Link href="/shop?category=Fabrics" className="btn-accent self-start">
                 Explore
               </Link>
             </div>

@@ -31,7 +31,7 @@ export default function HeroSection() {
               <Link href="/shop" className="btn-primary px-10 py-4">
                 Shop Collection
               </Link>
-              <Link href="/shop?category=fabric" className="btn-secondary px-10 py-4">
+              <Link href="/shop?category=Fabrics" className="btn-secondary px-10 py-4">
                 View Fabrics
               </Link>
             </div>
