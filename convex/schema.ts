@@ -27,8 +27,11 @@ export default defineSchema({
     featured: v.optional(v.boolean()),
     newArrival: v.optional(v.boolean()),
     badge: v.optional(v.string()),
+    vendorId: v.optional(v.id("vendors")),
+    vendorStatus: v.optional(v.string()), // "pending_review" | "approved" | "rejected"
+    tags: v.optional(v.array(v.string())),
     createdAt: v.number(),
-  }).index("by_slug", ["slug"]),
+  }).index("by_slug", ["slug"]).index("by_vendor", ["vendorId"]).index("by_vendorStatus", ["vendorStatus"]),
 
   orders: defineTable({
     legacyId: v.optional(v.string()), // e.g. "ORD-1234567890"
@@ -142,6 +145,57 @@ export default defineSchema({
     subscribedAt: v.number(),
     unsubscribedAt: v.optional(v.number()),
   }).index("by_email", ["email"]),
+
+  // Vendor accounts — fashion stores that list products on Meglit.
+  vendors: defineTable({
+    storeName: v.string(),
+    contactName: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    description: v.optional(v.string()),
+    passwordHash: v.string(),
+    salt: v.string(),
+    status: v.string(), // "pending" | "active" | "suspended"
+    bankName: v.optional(v.string()),
+    bankCode: v.optional(v.string()),
+    accountNumber: v.optional(v.string()),
+    accountName: v.optional(v.string()),
+    paystackRecipientCode: v.optional(v.string()),
+    totalEarnings: v.optional(v.number()),
+    pendingPayout: v.optional(v.number()),
+    totalPaidOut: v.optional(v.number()),
+    appliedAt: v.number(),
+    approvedAt: v.optional(v.number()),
+  })
+    .index("by_email", ["email"])
+    .index("by_status", ["status"]),
+
+  // Individual payout records for vendors.
+  vendorPayouts: defineTable({
+    vendorId: v.id("vendors"),
+    orderId: v.id("orders"),
+    orderReference: v.optional(v.string()),
+    saleAmount: v.number(),       // full item total
+    commissionRate: v.number(),   // e.g. 0.15
+    commissionAmount: v.number(), // saleAmount * commissionRate
+    vendorAmount: v.number(),     // saleAmount - commissionAmount
+    status: v.string(),           // "pending" | "paid" | "failed"
+    paystackTransferCode: v.optional(v.string()),
+    paystackTransferRef: v.optional(v.string()),
+    paidAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_vendor", ["vendorId"])
+    .index("by_order", ["orderId"])
+    .index("by_status", ["status"]),
+
+  // Global platform settings (commission rate, etc.)
+  settings: defineTable({
+    key: v.string(),
+    value: v.any(),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.string()),
+  }).index("by_key", ["key"]),
 
   // Inbound contact-us messages (also emailed to info@).
   contactMessages: defineTable({

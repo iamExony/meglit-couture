@@ -82,8 +82,7 @@ function LoginForm() {
         </form>
 
         <p className="text-[11px] text-ink-400 text-center mt-6">
-          Default credentials: <code>admin / admin123</code>. Override via{" "}
-          <code>ADMIN_USERNAME</code> &amp; <code>ADMIN_PASSWORD</code> env vars.
+          Use the credentials set in your <code>.env.local</code> file.
         </p>
       </div>
     </div>

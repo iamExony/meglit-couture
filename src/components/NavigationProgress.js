@@ -146,13 +146,15 @@ export default function NavigationProgress() {
               className="absolute inset-5 rounded-full border-[2.5px] border-transparent border-b-brand-950 border-l-brand-950"
               style={{ animation: "spin 1.6s linear infinite reverse" }}
             />
-            {/* The "M" */}
-            <span
-              className="relative font-heading font-bold text-brand-950 text-3xl leading-none select-none"
-              style={{ letterSpacing: "-0.04em" }}
-            >
-              M
-            </span>
+            {/* Logo */}
+            <img
+              src="/meglit-logo.svg"
+              alt="Meglit"
+              width={48}
+              height={48}
+              className="relative object-contain select-none"
+              style={{ filter: "brightness(0) saturate(0)" }}
+            />
           </div>
         </div>
       ) : null}

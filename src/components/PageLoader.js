@@ -8,6 +8,8 @@
  * Reused by every `loading.js` in the App Router so it appears
  * automatically on every route transition (storefront, admin, staff, etc.).
  */
+import Image from "next/image";
+
 export default function PageLoader({ label = "Loading" }) {
   return (
     <div
@@ -30,13 +32,16 @@ export default function PageLoader({ label = "Loading" }) {
             className="absolute inset-7 rounded-full border-[2.5px] border-transparent border-b-brand-950 border-l-brand-950"
             style={{ animation: "spin 1.8s linear infinite reverse" }}
           />
-          {/* The "M" */}
-          <span
-            className="relative font-heading font-bold text-brand-950 text-5xl leading-none select-none"
-            style={{ letterSpacing: "-0.04em" }}
-          >
-            M
-          </span>
+          {/* Logo */}
+          <Image
+            src="/meglit-logo.svg"
+            alt="Meglit"
+            width={52}
+            height={52}
+            className="relative object-contain select-none"
+            style={{ filter: "brightness(0) saturate(0)" }}
+            aria-hidden
+          />
         </div>
         <span className="text-[11px] font-semibold tracking-[0.35em] uppercase text-brand-700 animate-soft-pulse">
           Meglit Couture

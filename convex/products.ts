@@ -68,6 +68,9 @@ export const create = mutation({
     newArrival: v.optional(v.boolean()),
     badge: v.optional(v.string()),
     legacyId: v.optional(v.number()),
+    vendorId: v.optional(v.id("vendors")),
+    vendorStatus: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, a) => {
     const slug = (a.slug || a.name).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
@@ -97,6 +100,9 @@ export const create = mutation({
       newArrival: a.newArrival,
       badge: a.badge,
       legacyId: a.legacyId,
+      vendorId: a.vendorId,
+      vendorStatus: a.vendorStatus,
+      tags: a.tags ?? [],
       createdAt: Date.now(),
     });
     return await withResolvedImages(ctx, await ctx.db.get(id));
@@ -217,6 +223,35 @@ export const seedIfEmpty = mutation({
       count++;
     }
     return { seeded: count };
+  },
+});
+
+export const listByVendorStatus = query({
+  args: { vendorStatus: v.string() },
+  handler: async (ctx, { vendorStatus }) => {
+    const products = await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("vendorStatus"), vendorStatus))
+      .collect();
+    return await Promise.all(products.map((p) => withResolvedImages(ctx, p)));
+  },
+});
+
+export const countByVendorStatus = query({
+  args: { vendorStatus: v.string() },
+  handler: async (ctx, { vendorStatus }) => {
+    const products = await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("vendorStatus"), vendorStatus))
+      .collect();
+    return products.length;
+  },
+});
+
+export const setVendorStatus = mutation({
+  args: { id: v.id("products"), vendorStatus: v.string() },
+  handler: async (ctx, { id, vendorStatus }) => {
+    await ctx.db.patch(id, { vendorStatus });
   },
 });
 

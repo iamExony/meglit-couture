@@ -20,6 +20,91 @@ const MEASUREMENT_FIELDS = [
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 const BADGE_OPTIONS = ["", "Best Seller", "New Arrival", "Limited Edition", "Sale", "Sold Out", "Pre-order"];
 
+// ── Hair ──────────────────────────────────────────────────────────────────────
+const HAIR_CATEGORIES = [
+  { name: "Wigs", subcategories: ["Frontal Wigs", "Closure Wigs", "Glueless Wigs", "Headband Wigs", "Bob Wigs"] },
+  { name: "Bundles & Deals", subcategories: ["Single Bundles", "3-Bundle Deals", "Bundle + Closure Deals", "Bundle + Frontal Deals"] },
+  { name: "Closures & Frontals", subcategories: ["Lace Closures", "Lace Frontals", "360 Frontals", "Kim K Closures"] },
+  { name: "Clip-ins & Ponytails", subcategories: ["Clip-in Extensions", "Drawstring Ponytails", "Tape-ins"] },
+  { name: "Shop By Texture", subcategories: ["Straight", "Wavy", "Curly", "Coily & Yaki"] },
+  { name: "Shop By Hair Origin", subcategories: ["Raw Vietnamese", "Raw Cambodian", "Luxury Virgin"] },
+];
+const HAIR_TAG_GROUPS = [
+  { label: "Type", tags: ["Wigs", "Frontal Wigs", "Closure Wigs", "Glueless Wigs", "Headband Wigs", "Bob Wigs", "Single Bundle", "3-Bundle Deal", "Bundle + Closure Deal", "Bundle + Frontal Deal", "Lace Closure", "Lace Frontal", "360 Frontal", "Kim K Closure", "Clip-in Extensions", "Drawstring Ponytails", "Tape-ins"] },
+  { label: "Texture", tags: ["Bone Straight", "Silky Straight", "Body Wave", "Water Wave", "Deep Wave", "Kinky Curly", "Jerry Curly", "Kinky Straight", "Yaki Straight", "Wavy", "Coily"] },
+  { label: "Origin", tags: ["Vietnamese Raw", "Raw Cambodian", "Brazilian Luxury", "Luxury Virgin", "100% Raw Hair", "Unprocessed", "Vietnamese Donor", "Cambodian Donor", "Donor Hair"] },
+  { label: "Length", tags: ["10 inches", "12 inches", "14 inches", "16 inches", "18 inches", "20 inches", "22 inches", "24 inches", "26 inches", "28 inches", "30 inches"] },
+  { label: "Color", tags: ["Natural Color (1B)", "Jet Black (1)", "613 Blonde", "Piano Color", "Burgundy", "Auburn", "Highlights"] },
+  { label: "Lace & Cap", tags: ["HD Lace", "Transparent Lace", "Swiss Lace", "13x4 Frontal", "13x6 Frontal", "5x5 Closure", "4x4 Closure", "360 Lace", "Glueless", "Pre-plucked"] },
+  { label: "Density & Quality", tags: ["180% Density", "150% Density", "200% Density", "Double Drawn", "Single Drawn", "Luxury Package", "DIY Install", "Temporary", "10-Piece Set", "Drawstring"] },
+];
+
+// ── Bags ──────────────────────────────────────────────────────────────────────
+const BAG_CATEGORIES = [
+  { name: "Handbags", subcategories: ["Tote Bags", "Shoulder Bags", "Crossbody Bags", "Clutch Bags", "Satchels", "Mini Bags"] },
+  { name: "Backpacks", subcategories: ["Fashion Backpacks", "Mini Backpacks", "Laptop Bags"] },
+  { name: "Wallets & Purses", subcategories: ["Card Holders", "Coin Purses", "Long Wallets", "Wristlets"] },
+  { name: "Travel Bags", subcategories: ["Duffel Bags", "Weekend Bags", "Gym Bags"] },
+];
+const BAG_TAG_GROUPS = [
+  { label: "Bag Type", tags: ["Handbag", "Tote Bag", "Shoulder Bag", "Crossbody Bag", "Clutch", "Satchel", "Mini Bag", "Backpack", "Fashion Backpack", "Mini Backpack", "Card Holder", "Long Wallet", "Wristlet", "Duffel Bag", "Weekend Bag", "Gym Bag"] },
+  { label: "Material", tags: ["Genuine Leather", "Faux Leather", "PU Leather", "Canvas", "Suede", "Patent Leather", "Straw", "Fabric", "Croc Print"] },
+  { label: "Bag Size", tags: ["Mini", "Small", "Medium", "Large", "Extra Large"] },
+  { label: "Bag Color", tags: ["Black", "Brown", "Tan", "Nude", "White", "Red", "Navy", "Camel", "Grey", "Multi-color"] },
+  { label: "Closure", tags: ["Zipper", "Magnetic Snap", "Drawstring", "Open Top", "Buckle", "Flap"] },
+  { label: "Features", tags: ["Adjustable Strap", "Detachable Strap", "Multiple Compartments", "Laptop Compartment", "Waterproof", "Anti-theft"] },
+];
+
+// ── Shoes ─────────────────────────────────────────────────────────────────────
+const SHOE_CATEGORIES = [
+  { name: "Heels", subcategories: ["Stilettos", "Block Heels", "Wedge Heels", "Kitten Heels", "Platform Heels"] },
+  { name: "Flats & Loafers", subcategories: ["Ballet Flats", "Loafers", "Mules", "Slides", "Mary Janes"] },
+  { name: "Sandals", subcategories: ["Strappy Sandals", "Flat Sandals", "Heeled Sandals", "Gladiator Sandals"] },
+  { name: "Sneakers & Casual", subcategories: ["Classic Sneakers", "Platform Sneakers", "Chunky Sneakers", "Slip-ons"] },
+  { name: "Boots", subcategories: ["Ankle Boots", "Knee-High Boots", "Chelsea Boots", "Combat Boots"] },
+];
+const SHOE_TAG_GROUPS = [
+  { label: "Shoe Type", tags: ["Heels", "Stilettos", "Block Heels", "Wedge", "Kitten Heels", "Platform Heels", "Flats", "Ballet Flats", "Loafers", "Mules", "Slides", "Sandals", "Sneakers", "Ankle Boots", "Knee-High Boots", "Chelsea Boots", "Combat Boots"] },
+  { label: "Heel Height", tags: ["Flat", "Low Heel (1-2\")", "Mid Heel (2-3\")", "High Heel (4\"+)", "Extra High (5\"+)"] },
+  { label: "Shoe Material", tags: ["Leather", "Faux Leather", "Suede", "Patent Leather", "Satin", "Fabric", "Metallic"] },
+  { label: "Toe Shape", tags: ["Round Toe", "Pointed Toe", "Open Toe", "Square Toe", "Peep Toe", "Almond Toe"] },
+  { label: "Shoe Closure", tags: ["Lace-up", "Buckle", "Slip-on", "Zip", "Hook & Loop", "Ankle Strap"] },
+  { label: "Shoe Size", tags: ["Size 36", "Size 37", "Size 38", "Size 39", "Size 40", "Size 41", "Size 42", "Size 43"] },
+  { label: "Occasion", tags: ["Casual", "Formal", "Evening", "Office", "Wedding", "Beach", "Party"] },
+];
+
+// ── Jewelry ───────────────────────────────────────────────────────────────────
+const JEWELRY_CATEGORIES = [
+  { name: "Earrings",            subcategories: ["Stud Earrings", "Hoop Earrings", "Drop Earrings", "Ear Cuffs", "Cluster Earrings"] },
+  { name: "Bangles & Bracelets", subcategories: ["Bangles", "Charm Bracelets", "Cuff Bracelets", "Tennis Bracelets", "Beaded Bracelets"] },
+  { name: "Necklaces",           subcategories: ["Pendant Necklaces", "Layered Chains", "Chokers", "Statement Necklaces", "Pearl Necklaces"] },
+  { name: "Rings",               subcategories: ["Cocktail Rings", "Bands", "Statement Rings", "Stacking Rings", "Knuckle Rings"] },
+  { name: "Sets & Bundles",      subcategories: ["Necklace & Earring Sets", "Full Jewelry Sets", "Bracelet Sets"] },
+];
+const JEWELRY_TAG_GROUPS = [
+  { label: "Jewelry Type", tags: ["Earrings", "Stud Earrings", "Hoop Earrings", "Drop Earrings", "Ear Cuffs", "Bangles", "Charm Bracelet", "Cuff Bracelet", "Tennis Bracelet", "Beaded Bracelet", "Necklace", "Pendant Necklace", "Layered Chain", "Choker", "Statement Necklace", "Pearl Necklace", "Ring", "Cocktail Ring", "Statement Ring", "Stacking Ring", "Jewelry Set", "Bridal Set"] },
+  { label: "Metal & Material", tags: ["Gold Plated", "Silver", "Rose Gold", "Sterling Silver", "Brass", "Stainless Steel", "Gold-filled", "Rhodium Plated"] },
+  { label: "Gemstone", tags: ["Cubic Zirconia", "Crystal", "Pearl", "Turquoise", "Onyx", "Coral", "Beads", "No Gemstone"] },
+  { label: "Finish", tags: ["Gold", "Silver", "Rose Gold", "Gunmetal", "Two-tone", "Oxidized", "Matte"] },
+  { label: "Style", tags: ["Minimalist", "Statement", "Bohemian", "Classic", "Modern", "Bridal", "Vintage", "Casual"] },
+  { label: "Occasion", tags: ["Everyday Wear", "Formal", "Wedding", "Party", "Office", "Gift"] },
+];
+
+// ── Unified helpers ────────────────────────────────────────────────────────────
+const ALL_CUSTOM_CATEGORIES = [...HAIR_CATEGORIES, ...BAG_CATEGORIES, ...SHOE_CATEGORIES, ...JEWELRY_CATEGORIES];
+const HAIR_CAT_NAMES    = new Set(HAIR_CATEGORIES.map((c) => c.name));
+const BAG_CAT_NAMES     = new Set(BAG_CATEGORIES.map((c) => c.name));
+const SHOE_CAT_NAMES    = new Set(SHOE_CATEGORIES.map((c) => c.name));
+const JEWELRY_CAT_NAMES = new Set(JEWELRY_CATEGORIES.map((c) => c.name));
+
+function getTagGroups(category) {
+  if (HAIR_CAT_NAMES.has(category))    return HAIR_TAG_GROUPS;
+  if (BAG_CAT_NAMES.has(category))     return BAG_TAG_GROUPS;
+  if (SHOE_CAT_NAMES.has(category))    return SHOE_TAG_GROUPS;
+  if (JEWELRY_CAT_NAMES.has(category)) return JEWELRY_TAG_GROUPS;
+  return [...HAIR_TAG_GROUPS, ...BAG_TAG_GROUPS, ...SHOE_TAG_GROUPS, ...JEWELRY_TAG_GROUPS];
+}
+
 function normalizeColor(c) {
   if (!c) return null;
   if (typeof c === "string") {
@@ -50,6 +135,7 @@ const EMPTY = {
   featured: false,
   newArrival: false,
   badge: "",
+  tags: [],
 };
 
 export default function ProductsPage() {
@@ -96,6 +182,7 @@ export default function ProductsPage() {
       sizeMeasurements: p.sizeMeasurements && typeof p.sizeMeasurements === "object" ? p.sizeMeasurements : {},
       colors: "",
       images: Array.isArray(p.images) ? p.images.join("\n") : p.images || "",
+      tags: Array.isArray(p.tags) ? p.tags : [],
     });
     const imgs = Array.isArray(p.images) ? p.images : [];
     setImageItems(imgs.map((u) => ({ key: u, preview: u })));
@@ -346,6 +433,7 @@ export default function ProductsPage() {
                   </div>
                 )}
               </div>
+              <TagsPicker value={form.tags} onChange={(v) => setForm({ ...form, tags: v })} tagGroups={getTagGroups(form.category)} />
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={!!form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
@@ -451,8 +539,17 @@ function SizeMeasurements({ sizes, value, onChange }) {
 }
 
 // ----- Category / subcategory selects -----
+function mergeWithCustomCategories(dbCategories) {
+  const all = [...ALL_CUSTOM_CATEGORIES];
+  for (const c of dbCategories) {
+    if (!all.find((h) => h.name === c.name)) all.push(c);
+  }
+  return all;
+}
+
 function CategorySelect({ label, value, categories, onChange }) {
-  const options = categories.map((c) => c.name);
+  const merged = mergeWithCustomCategories(categories);
+  const options = merged.map((c) => c.name);
   const isOther = value && !options.includes(value);
   return (
     <div>
@@ -472,12 +569,12 @@ function CategorySelect({ label, value, categories, onChange }) {
         ))}
         <option value="__custom">Other (type below)</option>
       </select>
-      {(isOther || value === "" || categories.length === 0) && (
+      {(isOther || value === "" || merged.length === 0) && (
         <input
           type="text"
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={categories.length === 0 ? "No categories yet — type freely" : "Custom category"}
+          placeholder={merged.length === 0 ? "No categories yet — type freely" : "Custom category"}
           className="mt-1 w-full px-3 py-2 border border-brand-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
         />
       )}
@@ -486,7 +583,8 @@ function CategorySelect({ label, value, categories, onChange }) {
 }
 
 function SubcategorySelect({ label, value, category, categories, onChange }) {
-  const cat = categories.find((c) => c.name === category);
+  const merged = mergeWithCustomCategories(categories);
+  const cat = merged.find((c) => c.name === category);
   const options = cat?.subcategories || [];
   const isOther = value && !options.includes(value);
   return (
@@ -521,17 +619,82 @@ function SubcategorySelect({ label, value, category, categories, onChange }) {
   );
 }
 
+function TagsPicker({ value, onChange, tagGroups = HAIR_TAG_GROUPS }) {
+  const [openGroups, setOpenGroups] = useState({});
+  const [custom, setCustom] = useState("");
+  const selected = Array.isArray(value) ? value : [];
+
+  function toggle(tag) {
+    onChange(selected.includes(tag) ? selected.filter((t) => t !== tag) : [...selected, tag]);
+  }
+  function addCustom(e) {
+    e.preventDefault();
+    const t = custom.trim();
+    if (t && !selected.includes(t)) onChange([...selected, t]);
+    setCustom("");
+  }
+
+  return (
+    <div>
+      <span className="block text-xs uppercase tracking-wider text-ink-600 mb-2">Product Tags <span className="normal-case font-normal text-ink-400">(type, material, size…)</span></span>
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {selected.map((tag) => (
+            <span key={tag} className="flex items-center gap-1 bg-accent-100 text-accent-800 text-[11px] px-2 py-0.5 rounded-full font-medium">
+              {tag}
+              <button type="button" onClick={() => toggle(tag)} className="text-accent-500 hover:text-accent-900 font-bold leading-none ml-0.5">×</button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="border border-brand-200 rounded-lg overflow-hidden divide-y divide-brand-100">
+        {tagGroups.map((group) => {
+          const isOpen = openGroups[group.label];
+          const n = group.tags.filter((t) => selected.includes(t)).length;
+          return (
+            <div key={group.label}>
+              <button
+                type="button"
+                onClick={() => setOpenGroups((s) => ({ ...s, [group.label]: !s[group.label] }))}
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-ink-700 hover:bg-brand-50 transition-colors text-left"
+              >
+                <span>{group.label}{n > 0 && <span className="ml-1.5 text-accent-600">({n})</span>}</span>
+                <svg className={`w-3.5 h-3.5 text-ink-400 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {isOpen && (
+                <div className="px-3 py-2.5 bg-brand-50/50 flex flex-wrap gap-x-4 gap-y-2">
+                  {group.tags.map((tag) => (
+                    <label key={tag} className="flex items-center gap-1.5 cursor-pointer">
+                      <input type="checkbox" checked={selected.includes(tag)} onChange={() => toggle(tag)} className="w-3.5 h-3.5 accent-accent-600 rounded" />
+                      <span className="text-xs text-ink-700">{tag}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <form onSubmit={addCustom} className="flex gap-2 mt-2">
+        <input type="text" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Add custom tag…"
+          className="flex-1 px-3 py-1.5 border border-brand-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-accent-500" />
+        <button type="submit" className="px-3 py-1.5 bg-brand-100 hover:bg-brand-200 text-xs rounded-lg transition-colors font-medium">Add</button>
+      </form>
+    </div>
+  );
+}
+
 function SelectWithCustom({ label, value, options, onChange, placeholder }) {
-  const isOther = value && !options.includes(value);
+  const [customMode, setCustomMode] = useState(() => Boolean(value && !options.includes(value)));
   return (
     <div>
       <span className="block text-xs uppercase tracking-wider text-ink-600 mb-1">{label}</span>
       <select
-        value={isOther ? "__custom" : value || ""}
+        value={customMode ? "__custom" : value || ""}
         onChange={(e) => {
           const v = e.target.value;
-          if (v === "__custom") onChange("");
-          else onChange(v);
+          if (v === "__custom") { setCustomMode(true); onChange(""); }
+          else { setCustomMode(false); onChange(v); }
         }}
         className="w-full px-3 py-2 border border-brand-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
       >
@@ -540,9 +703,10 @@ function SelectWithCustom({ label, value, options, onChange, placeholder }) {
         ))}
         <option value="__custom">Other (type below)</option>
       </select>
-      {isOther && (
+      {customMode && (
         <input
           type="text"
+          autoFocus
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}

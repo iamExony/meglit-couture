@@ -24,8 +24,9 @@ export async function POST(request) {
       maxAge: ADMIN_COOKIE_MAX_AGE,
     });
     return res;
-  } catch {
-    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  } catch (err) {
+    console.error("[admin/login] error:", err?.message || err);
+    return NextResponse.json({ error: "Bad request", detail: err?.message }, { status: 400 });
   }
 }
 

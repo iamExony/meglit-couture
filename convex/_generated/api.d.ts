@@ -20,8 +20,10 @@ import type * as migrations from "../migrations.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as purchases from "../purchases.js";
+import type * as settings from "../settings.js";
 import type * as subscribers from "../subscribers.js";
 import type * as users from "../users.js";
+import type * as vendors from "../vendors.js";
 
 import type {
   ApiFromModules,
@@ -42,8 +44,10 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   products: typeof products;
   purchases: typeof purchases;
+  settings: typeof settings;
   subscribers: typeof subscribers;
   users: typeof users;
+  vendors: typeof vendors;
 }>;
 
 /**

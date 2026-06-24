@@ -252,6 +252,108 @@ export async function sendContactMessageEmail({ name, email, phone, subject, mes
   }
 }
 
+export async function sendVendorPasswordResetEmail({ to, storeName, resetUrl }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeName = escapeHtml(storeName || "there");
+  const safeUrl = escapeHtml(resetUrl);
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Portal</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 24px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">Hi <strong>${safeName}</strong>,</p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              We received a request to reset the password for your Meglit vendor account. Click the button below to choose a new password.
+            </p>
+            <p style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#555;">
+              This link expires in <strong>1 hour</strong>. If you didn't request this, you can safely ignore this email.
+            </p>
+            <a href="${safeUrl}" style="display:inline-block;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 32px;text-decoration:none;">Reset Password</a>
+          </td></tr>
+          <tr><td style="padding:16px 32px;background:#faf8f3;border-top:1px solid #ece7da;">
+            <p style="margin:0;font-size:12px;color:#888;line-height:1.6;">Or copy this link into your browser:<br>
+              <a href="${safeUrl}" style="color:#555;word-break:break-all;">${safeUrl}</a>
+            </p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "Reset your Meglit vendor password",
+      html,
+      text: `Hi ${storeName},\n\nClick the link below to reset your password. It expires in 1 hour.\n\n${resetUrl}\n\nIf you didn't request this, ignore this email.\n\nMeglit Couture`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
+}
+
+export async function sendVendorInviteEmail({ to, inviteUrl }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeUrl = escapeHtml(inviteUrl);
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Invitation</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 24px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">You've been invited to sell on <strong>Meglit Couture</strong> — a curated fashion platform reaching thousands of style-conscious shoppers across Nigeria.</p>
+            <p style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#555;">Click the button below to complete your vendor application. It only takes a few minutes.</p>
+            <a href="${safeUrl}" style="display:inline-block;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 32px;text-decoration:none;">Apply to Sell</a>
+          </td></tr>
+          <tr><td style="padding:16px 32px;background:#faf8f3;border-top:1px solid #ece7da;">
+            <p style="margin:0;font-size:12px;color:#888;line-height:1.6;">Or copy this link into your browser:<br>
+              <a href="${safeUrl}" style="color:#555;word-break:break-all;">${safeUrl}</a>
+            </p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "You're invited to sell on Meglit Couture",
+      html,
+      text: `You've been invited to sell on Meglit Couture.\n\nApply here: ${inviteUrl}\n\nMeglit Couture · meglitcouture.com`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
+}
+
 function buildNewsletterHtml({ subject, bodyHtml, bodyText, unsubscribeUrl }) {
   const safeSubject = escapeHtml(subject);
   return `
@@ -272,6 +374,212 @@ function buildNewsletterHtml({ subject, bodyHtml, bodyText, unsubscribeUrl }) {
       </div>
     </div>
   `;
+}
+
+export async function sendVendorRemovedEmail({ to, storeName }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeName = escapeHtml(storeName || "there");
+  const supportEmail = REPLY_TO;
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Account</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 24px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">Hi <strong>${safeName}</strong>,</p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              We're writing to let you know that your vendor account on <strong>Meglit Couture</strong> has been removed. You will no longer be able to access your vendor dashboard or list products on the platform.
+            </p>
+            <p style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#555;">
+              If you have any concerns about this decision or would like to discuss further, please don't hesitate to reach out to our support team — we're happy to help.
+            </p>
+            <a href="mailto:${supportEmail}" style="display:inline-block;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 32px;text-decoration:none;">Contact Support</a>
+          </td></tr>
+          <tr><td style="padding:16px 32px;background:#faf8f3;border-top:1px solid #ece7da;">
+            <p style="margin:0;font-size:12px;color:#888;line-height:1.6;">
+              You can also email us directly at <a href="mailto:${supportEmail}" style="color:#555;">${supportEmail}</a>
+            </p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "Your Meglit Couture vendor account has been removed",
+      html,
+      text: `Hi ${storeName},\n\nYour vendor account on Meglit Couture has been removed. You will no longer be able to access your vendor dashboard or list products on the platform.\n\nIf you have any concerns, please contact our support team at ${supportEmail}.\n\nMeglit Couture · meglitcouture.com`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
+}
+
+export async function sendVendorApplicationConfirmEmail({ to, storeName }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeName = escapeHtml(storeName || "there");
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Application</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 24px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">Hi <strong>${safeName}</strong>,</p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              Thank you for applying to sell on <strong>Meglit Couture</strong>. We've received your vendor application and our team is currently reviewing it.
+            </p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              You'll receive an email notification once your application has been reviewed — typically within 2–3 business days. If approved, the email will include a direct link to sign in to your vendor dashboard.
+            </p>
+            <p style="margin:0;font-size:14px;line-height:1.65;color:#555;">If you have any questions in the meantime, reply to this email and we'll be happy to help.</p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "We've received your Meglit Couture vendor application",
+      html,
+      text: `Hi ${storeName},\n\nThank you for applying to sell on Meglit Couture. We've received your application and our team is reviewing it.\n\nYou'll hear from us within 2–3 business days. If approved, we'll send you a link to sign in to your vendor dashboard.\n\nMeglit Couture · meglitcouture.com`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
+}
+
+export async function sendVendorApprovalEmail({ to, storeName, loginUrl }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeName = escapeHtml(storeName || "there");
+  const safeUrl = escapeHtml(loginUrl);
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Approval</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 8px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">Hi <strong>${safeName}</strong>,</p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              Great news — your vendor application has been <strong style="color:#1a7a3a;">approved</strong>! Welcome to Meglit Couture.
+            </p>
+            <p style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#555;">
+              You can now sign in to your vendor dashboard to start listing your products, track orders, and manage your store.
+            </p>
+            <a href="${safeUrl}" style="display:inline-block;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 32px;text-decoration:none;">Sign In to Vendor Dashboard</a>
+          </td></tr>
+          <tr><td style="padding:24px 32px;background:#faf8f3;border-top:1px solid #ece7da;">
+            <p style="margin:0;font-size:12px;color:#888;line-height:1.6;">Or copy this link into your browser:<br>
+              <a href="${safeUrl}" style="color:#555;word-break:break-all;">${safeUrl}</a>
+            </p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "Your Meglit Couture vendor account is approved 🎉",
+      html,
+      text: `Hi ${storeName},\n\nYour vendor application has been approved! Welcome to Meglit Couture.\n\nSign in to your vendor dashboard here:\n${loginUrl}\n\nMeglit Couture · meglitcouture.com`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
+}
+
+export async function sendVendorRejectionEmail({ to, storeName }) {
+  const c = client();
+  if (!c) return { skipped: true };
+  const safeName = escapeHtml(storeName || "there");
+  const html = `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f7f4ef;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:32px 0;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <tr><td style="padding:28px 32px 20px;background:#1a1a1a;">
+            <div style="font-size:20px;letter-spacing:.08em;font-weight:700;color:#fff;">MEGLIT COUTURE</div>
+            <div style="font-size:10px;letter-spacing:.3em;color:#caa75a;text-transform:uppercase;margin-top:3px;">Vendor Application</div>
+          </td></tr>
+          <tr><td style="padding:32px 32px 24px;">
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.65;">Hi <strong>${safeName}</strong>,</p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              Thank you for your interest in selling on Meglit Couture. After carefully reviewing your application, we're unable to approve it at this time.
+            </p>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#555;">
+              This decision may be due to the current vendor capacity, category fit, or the information provided in your application. We encourage you to reapply in the future as circumstances change.
+            </p>
+            <p style="margin:0;font-size:14px;line-height:1.65;color:#555;">
+              If you believe this is an error or have questions, please reply to this email.
+            </p>
+          </td></tr>
+          <tr><td style="padding:16px 32px 20px;border-top:1px solid #eee;font-size:11px;color:#aaa;text-align:center;">
+            © ${new Date().getFullYear()} Meglit Couture · meglitcouture.com
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+  try {
+    const result = await c.emails.send({
+      from: FROM,
+      to,
+      replyTo: REPLY_TO,
+      subject: "Update on your Meglit Couture vendor application",
+      html,
+      text: `Hi ${storeName},\n\nThank you for your interest in selling on Meglit Couture. After reviewing your application, we're unable to approve it at this time.\n\nYou're welcome to reapply in the future. If you have questions, reply to this email.\n\nMeglit Couture · meglitcouture.com`,
+    });
+    if (result.error) return { error: result.error };
+    return { id: result.data?.id };
+  } catch (err) {
+    return { error: String(err?.message || err) };
+  }
 }
 
 export async function sendNewsletterEmail({ to, subject, bodyHtml, bodyText, unsubscribeUrl }) {

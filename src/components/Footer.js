@@ -57,6 +57,16 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li className="pt-2 border-t border-brand-800">
+                <Link href="/become-a-vendor" className="text-accent-400 hover:text-accent-300 transition-colors text-sm font-medium">
+                  Sell on Meglit
+                </Link>
+              </li>
+              <li>
+                <Link href="/vendor/login" className="text-brand-400 hover:text-white transition-colors text-sm">
+                  Vendor Login
+                </Link>
+              </li>
             </ul>
           </div>
 

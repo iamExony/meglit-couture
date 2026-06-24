@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ProductCard from "@/components/ProductCard";
@@ -9,12 +9,18 @@ import { api } from "../../../../convex/_generated/api";
 function ShopContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
+  const subParam = searchParams.get("sub");
   const filterParam = searchParams.get("filter");
 
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || "all");
   const [sortBy, setSortBy] = useState("featured");
   const [priceRange, setPriceRange] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+
+  // Sync state when URL params change (e.g. clicking navbar category links)
+  useEffect(() => {
+    setSelectedCategory(categoryParam || "all");
+  }, [categoryParam]);
 
   const products = useQuery(api.products.list, {});
   const categories = useQuery(api.categories.list, {}) || [];
@@ -23,9 +29,18 @@ function ShopContent() {
     if (!products) return [];
     let result = [...products];
 
-    // Category filter
+    // Category filter — case-insensitive so "Wigs" matches slug "wigs"
     if (selectedCategory !== "all") {
-      result = result.filter((p) => p.category === selectedCategory);
+      result = result.filter(
+        (p) => String(p.category || "").toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+
+    // Subcategory filter from URL ?sub= param
+    if (subParam) {
+      result = result.filter(
+        (p) => String(p.subcategory || "").toLowerCase() === subParam.toLowerCase()
+      );
     }
 
     // New arrivals filter

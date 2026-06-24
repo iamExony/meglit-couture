@@ -66,13 +66,16 @@ export default function ProductCard({ product }) {
             )}
           </div>
 
-          {/* Quick Add - Slides up on hover */}
-          <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          {/* Add to Cart - slides up on hover */}
+          <div className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
             <button
               onClick={handleQuickAdd}
-              className="w-full bg-white text-brand-950 py-2.5 text-[11px] font-semibold uppercase tracking-wider hover:bg-brand-950 hover:text-white transition-colors"
+              className="w-full bg-accent-600 text-white py-3 text-[11px] font-semibold uppercase tracking-wider hover:bg-accent-700 transition-colors duration-200 flex items-center justify-center gap-2"
             >
-              Quick Add
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              Add to Cart
             </button>
           </div>
 
@@ -89,7 +92,7 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* Info */}
-        <div>
+        <div className="px-1 pt-2 pb-3">
           <p className="text-[10px] text-accent-600 uppercase tracking-[0.15em] font-medium mb-1">
             {product.category || "Product"}
           </p>

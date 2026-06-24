@@ -7,6 +7,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
+import TryOnModal from "@/components/TryOnModal";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -22,6 +23,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [showNotice, setShowNotice] = useState(false);
+  const [showTryOn, setShowTryOn] = useState(false);
 
   if (allProducts === undefined) {
     return (
@@ -54,8 +56,16 @@ export default function ProductDetailPage() {
     .filter((p) => p.category === product.category && p._id !== product._id)
     .slice(0, 4);
 
+  const hasColors = (product.colors || []).some((c) => normalizeProductColor(c));
+  const hasSizes = (product.sizes || []).length > 0;
+
   const handleAddToCart = () => {
-    if (!selectedSize || !selectedColor) {
+    if (hasSizes && !selectedSize) {
+      setShowNotice(true);
+      setTimeout(() => setShowNotice(false), 3000);
+      return;
+    }
+    if (hasColors && !selectedColor) {
       setShowNotice(true);
       setTimeout(() => setShowNotice(false), 3000);
       return;
@@ -200,38 +210,40 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Color Select */}
-              <div className="mb-6">
-                <h3 className="text-[11px] font-semibold text-ink-700 mb-3 uppercase tracking-[0.12em]">
-                  Color
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => {
-                    const c = normalizeProductColor(color);
-                    if (!c) return null;
-                    const isActive = selectedColor === c.name;
-                    return (
-                      <button
-                        key={c.name}
-                        onClick={() => setSelectedColor(c.name)}
-                        className={`flex items-center gap-2 px-3 py-2 text-xs border transition-colors ${
-                          isActive
-                            ? "border-brand-950 bg-brand-50 text-brand-950"
-                            : "border-brand-200 text-ink-700 hover:border-brand-950"
-                        }`}
-                        id={`color-${c.name.replace(/\s+/g, '-')}`}
-                      >
-                        {c.hex && (
-                          <span
-                            className="inline-block w-4 h-4 rounded-full border border-brand-200"
-                            style={{ backgroundColor: c.hex }}
-                          />
-                        )}
-                        {c.name}
-                      </button>
-                    );
-                  })}
+              {hasColors && (
+                <div className="mb-6">
+                  <h3 className="text-[11px] font-semibold text-ink-700 mb-3 uppercase tracking-[0.12em]">
+                    Color
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {product.colors.map((color) => {
+                      const c = normalizeProductColor(color);
+                      if (!c) return null;
+                      const isActive = selectedColor === c.name;
+                      return (
+                        <button
+                          key={c.name}
+                          onClick={() => setSelectedColor(c.name)}
+                          className={`flex items-center gap-2 px-3 py-2 text-xs border transition-colors ${
+                            isActive
+                              ? "border-brand-950 bg-brand-50 text-brand-950"
+                              : "border-brand-200 text-ink-700 hover:border-brand-950"
+                          }`}
+                          id={`color-${c.name.replace(/\s+/g, "-")}`}
+                        >
+                          {c.hex && (
+                            <span
+                              className="inline-block w-4 h-4 rounded-full border border-brand-200"
+                              style={{ backgroundColor: c.hex }}
+                            />
+                          )}
+                          {c.name}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity & Add to Cart */}
               <div className="flex items-center gap-4 mb-2">
@@ -273,11 +285,23 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
+              {/* Virtual Try-On */}
+              <button
+                onClick={() => setShowTryOn(true)}
+                className="w-full border border-accent-500 text-accent-600 text-sm font-semibold uppercase tracking-wider py-4 mb-3 flex items-center justify-center gap-2 hover:bg-accent-50 transition-colors"
+                id="try-on-btn"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                Virtual Try-On
+              </button>
+
               {/* Buy Now */}
               <Link
-                href={selectedSize && selectedColor ? "/checkout" : "#"}
+                href={(!hasSizes || selectedSize) && (!hasColors || selectedColor) ? "/checkout" : "#"}
                 onClick={(e) => {
-                  if (!selectedSize || !selectedColor) {
+                  if ((hasSizes && !selectedSize) || (hasColors && !selectedColor)) {
                     e.preventDefault();
                     setShowNotice(true);
                     setTimeout(() => setShowNotice(false), 3000);
@@ -407,6 +431,12 @@ export default function ProductDetailPage() {
           )}
         </div>
       </section>
+
+      <TryOnModal
+        product={product}
+        isOpen={showTryOn}
+        onClose={() => setShowTryOn(false)}
+      />
     </>
   );
 }

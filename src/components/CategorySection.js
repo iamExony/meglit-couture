@@ -6,9 +6,36 @@ import { api } from "../../convex/_generated/api";
 import Reveal from "./Reveal";
 
 export default function CategorySection() {
+  const PX = (id) =>
+    `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+
   const categoryImages = {
     palazzo: "/images/category-palazzo.png",
     fabric: "/images/category-fabrics.png",
+    fabrics: "/images/category-fabrics.png",
+    // hair
+    wigs: PX(17362825),
+    "bundles-deals": PX(14730877),
+    "closures-frontals": PX(17320163),
+    "clip-ins-ponytails": PX(4130535),
+    accessories: PX(13924051),
+    // bags
+    handbags: PX(9327162),
+    backpacks: PX(4830924),
+    "wallets-purses": PX(7953286),
+    "travel-bags": PX(18601494),
+    // shoes
+    heels: PX(134064),
+    "flats-loafers": PX(8100794),
+    sandals: PX(10827097),
+    "sneakers-casual": PX(1598505),
+    boots: PX(31450744),
+    // jewelry
+    earrings: PX(5985085),
+    "bangles-bracelets": PX(3266700),
+    necklaces: PX(2735970),
+    rings: PX(6616860),
+    "sets-bundles": PX(5119778),
   };
 
   const categories = useQuery(api.categories.list, {}) || [];
@@ -54,7 +81,7 @@ export default function CategorySection() {
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-brand-100 mb-4">
                   <img
-                    src={categoryImages[cat.slug] || cat.image || "/images/placeholder.png"}
+                    src={categoryImages[cat.slug] || cat.image || "/images/category-fabrics.png"}
                     alt={cat.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
